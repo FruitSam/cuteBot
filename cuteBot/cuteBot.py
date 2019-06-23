@@ -11,16 +11,13 @@ subreddit = reddit.subreddit('aww')
 hot_aww = subreddit.top('day',limit=20)
 url_arr = []
 
-
-
 def update_urls():
-    url_arr.clear
+    url_arr.clear()
     for i in range(0,20):
         for submission in hot_aww:
             if 'jpg' in submission.url:
                 url_arr.append(submission.url)
                 print(url_arr[i])
-        
 
 
 def dl(url):
@@ -33,12 +30,14 @@ def dl(url):
 def send_photo(): 
     threading.Timer(88400,send_photo).start()
     update_urls()
-    for i in range(0,20):
-        dl(url_arr[i])
-        img = open('pic.jpg','rb')
-        if os.stat('pic.jpg').st_size != 0:
-            bot.send_photo(chat_id ='@testingbottg',photo = img)
-        img.close
+    count = len(url_arr)
+    for i in range(0,count):
+        if(url_arr[i] is not None):
+            dl(url_arr[i])
+            img = open('pic.jpg','rb')
+            if os.stat('pic.jpg').st_size != 0:
+                bot.send_photo(chat_id ='@testingbottg',photo = img)
+            img.close
 
 
 @bot.message_handler(commands = ['start'])
