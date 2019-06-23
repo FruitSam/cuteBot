@@ -4,27 +4,31 @@ import os
 import praw 
 import threading
 
-bot_token = '835075644:AAERQCEPXSjpc-Z9SvZFPFcbPXNfiLUS3QI'
+bot_token = '828581923:AAEUVgE8KBPhEqkEjePEuS0RiRmoYDg2W_Q'
 bot = telebot.TeleBot(token=bot_token)
-reddit = praw.Reddit(client_id= 'D1O4NdmXoZVNpg', client_secret= 'voQJq4BVb4DWL8WMFCsmiZRzou4', username= 'tgdankbot', password= 'Kutaluta@3crest', user_agent= 'v1' )
-subreddit = reddit.subreddit('dankmemes')
-hot_memes = subreddit.top('day',limit=20)
-url_arr = [None]*20
+reddit = praw.Reddit(client_id= 'CYJNh3ecbQhxzQ', client_secret= 'du58jAIgpE9lbfXoLoJlkEUnl4Y', username= 'tgdankbot', password= 'Kutaluta@3crest', user_agent= 't5' )
+subreddit = reddit.subreddit('aww')
+hot_aww = subreddit.top('day',limit=20)
+url_arr = []
 
 
 
 def update_urls():
-    i = 0
-    for submission in hot_memes:
-        if not submission.stickied:
-            url_arr[i] = (submission.url)
-            i += 1
+    url_arr.clear
+    for i in range(0,20):
+        for submission in hot_aww:
+            if 'jpg' in submission.url:
+                url_arr.append(submission.url)
+                print(url_arr[i])
+        
 
 
 def dl(url):
     f = open('pic.jpg', 'wb')
-    f.write(urllib.request.urlopen(url).read())
+    if 'jpg' in url:
+        f.write(urllib.request.urlopen(url).read())
     f.close
+
 
 def send_photo(): 
     threading.Timer(88400,send_photo).start()
@@ -32,9 +36,9 @@ def send_photo():
     for i in range(0,20):
         dl(url_arr[i])
         img = open('pic.jpg','rb')
-        bot.send_photo(chat_id ='@testingbottg',photo = img)
+        if os.stat('pic.jpg').st_size != 0:
+            bot.send_photo(chat_id ='@testingbottg',photo = img)
         img.close
-
 
 
 @bot.message_handler(commands = ['start'])
