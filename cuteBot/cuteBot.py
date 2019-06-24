@@ -8,7 +8,7 @@ bot_token = '828581923:AAEUVgE8KBPhEqkEjePEuS0RiRmoYDg2W_Q'
 bot = telebot.TeleBot(token=bot_token)
 reddit = praw.Reddit(client_id= 'CYJNh3ecbQhxzQ', client_secret= 'du58jAIgpE9lbfXoLoJlkEUnl4Y', username= 'tgdankbot', password= 'Kutaluta@3crest', user_agent= 't5' )
 subreddit = reddit.subreddit('aww')
-hot_aww = subreddit.top('day',limit=20)
+hot_aww = subreddit.hot(limit=20)
 url_arr = []
 
 def update_urls():
@@ -28,7 +28,7 @@ def dl(url):
 
 
 def send_photo(): 
-    threading.Timer(88400,send_photo).start()
+    threading.Timer(21600,send_photo).start()
     update_urls()
     count = len(url_arr)
     for i in range(0,count):
