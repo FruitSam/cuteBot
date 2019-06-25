@@ -8,8 +8,9 @@ bot_token = '828581923:AAEUVgE8KBPhEqkEjePEuS0RiRmoYDg2W_Q'
 bot = telebot.TeleBot(token=bot_token)
 reddit = praw.Reddit(client_id= 'CYJNh3ecbQhxzQ', client_secret= 'du58jAIgpE9lbfXoLoJlkEUnl4Y', username= 'tgdankbot', password= 'Kutaluta@3crest', user_agent= 't5' )
 subreddit = reddit.subreddit('aww')
-hot_aww = subreddit.hot(limit=20)
+hot_aww = subreddit.hot(limit=30)
 url_arr = []
+server = Flask(__name__)
 
 def update_urls():
     url_arr.clear()
@@ -36,9 +37,13 @@ def send_photo():
             dl(url_arr[i])
             img = open('pic.jpg','rb')
             if os.stat('pic.jpg').st_size != 0:
-                bot.send_photo(chat_id ='@testingbottg',photo = img)
+                bot.send_photo(chat_id ='@cuteheaven',photo = img)
             img.close
 
+def keep_up():
+    threading.Timer(500,keep_up).start()
+    urllib.request.urlopen('https://dankmemes-bot.herokuapp.com/')
+    print('requested')
 
 @bot.message_handler(commands = ['start'])
 def send_welcome(message):
@@ -52,11 +57,19 @@ def send_welcome(message):
 def every24(message):
         send_photo()
         
-def listener(messages):
-    for m in messages:
-        print(str(m))
+        
+@server.route('/' + bot_token, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
 
 
-bot.set_update_listener(listener)
-bot.polling()
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://cuteheaven-bot.herokuapp.com/' + bot_token)
+    return "!", 200
+
+if __name__ == "__name__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 8000)))
 
