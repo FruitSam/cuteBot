@@ -1,1 +1,1 @@
-web: gunicorn cuteBot:server
+web: gunicorn cuteBot:app

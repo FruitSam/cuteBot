@@ -3,6 +3,7 @@ import urllib.request
 import os
 import praw 
 import threading
+from flask import Flask, request
 
 bot_token = '828581923:AAEUVgE8KBPhEqkEjePEuS0RiRmoYDg2W_Q'
 bot = telebot.TeleBot(token=bot_token)
@@ -10,7 +11,7 @@ reddit = praw.Reddit(client_id= 'CYJNh3ecbQhxzQ', client_secret= 'du58jAIgpE9lbf
 subreddit = reddit.subreddit('aww')
 hot_aww = subreddit.hot(limit=30)
 url_arr = []
-server = Flask(__name__)
+app = Flask(__name__)
 
 def update_urls():
     url_arr.clear()
@@ -56,20 +57,21 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: 'send 384252204' in message.text)
 def every24(message):
         send_photo()
+        keep_up()
         
         
-@server.route('/' + bot_token, methods=['POST'])
+@app.route('/' + bot_token, methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
 
 
-@server.route("/")
+@app.route("/")
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url='https://cuteheaven-bot.herokuapp.com/' + bot_token)
     return "!", 200
 
 if __name__ == "__name__":
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 8000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
