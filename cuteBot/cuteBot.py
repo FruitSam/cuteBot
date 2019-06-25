@@ -42,7 +42,7 @@ def send_photo():
 
 def keep_up():
     threading.Timer(500,keep_up).start()
-    urllib.request.urlopen('https://dankmemes-bot.herokuapp.com/')
+    urllib.request.urlopen('https://cuteheaven-bot.herokuapp.com/')
     print('requested')
 
 @bot.message_handler(commands = ['start'])
