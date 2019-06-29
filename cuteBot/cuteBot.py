@@ -14,7 +14,7 @@ url_arr = []
 app = Flask(__name__)
 
 def update_urls():
-    url_arr.clear()
+    url_arr[:] = []
     for i in range(0,20):
         for submission in hot_aww:
             if 'jpg' in submission.url:
@@ -33,13 +33,15 @@ def send_photo():
     threading.Timer(21600,send_photo).start()
     update_urls()
     count = len(url_arr)
-    for i in range(0,count):
+    for i in range(0,count-1):
         if(url_arr[i] is not None):
             dl(url_arr[i])
             img = open('pic.jpg','rb')
             if os.stat('pic.jpg').st_size != 0:
                 bot.send_photo(chat_id ='@cuteheaven',photo = img)
             img.close
+    keep_up()
+
 
 def keep_up():
     threading.Timer(500,keep_up).start()
